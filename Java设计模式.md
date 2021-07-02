@@ -6,7 +6,7 @@
 
 jvm的启动是通过启动引导类加载器创建一个初始类来完成，这个类是由jvm的具体实现来指定
 
-![image-20210628163455949](C:\Users\25753\AppData\Roaming\Typora\typora-user-images\image-20210628163455949.png)
+![image-20210628163455949](C:\Users\25753\Desktop\image-20210628163455949.png)
 
 ### 类加载过程
 
