@@ -109,3 +109,145 @@ joke
 
 ### 五、Springboot整合Mybatis
 
+添加Mybatis依赖和数据库驱动
+
+```xml
+<!--mybatis起步依赖-->
+<dependency>
+    <groupId>org.mybatis.spring.boot</groupId>
+    <artifactId>mybatis-spring-boot-starter</artifactId>
+    <version>1.1.1</version>
+</dependency>
+```
+
+```xml
+<!-- MySQL连接驱动 -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+```
+
+添加数据库配置
+
+```yaml
+spring
+   datasource
+     driverClassName：com.mysql.jdbc.Driver
+     url：jdbc:mysql://127.0.0.1:3306/tb_name?
+     username: root
+     password: root
+```
+
+### 创建实体Bean
+
+```java
+public class User {
+    // 主键
+    private Long id;
+    // 用户名
+    private String username;
+    // 密码
+    private String password;
+    // 姓名
+    private String name;
+  
+    //此处省略getter和setter方法 .. ..
+    
+}
+```
+
+### 编写Mapper
+
+```java
+@Mapper
+public interface UserMapper {
+	public List<User> queryUserList();
+}
+```
+
+注意：@Mapper标记该类是一个mybatis的mapper接口，可以被spring boot自动扫描到spring上下文中
+
+###  配置Mapper映射文件
+
+在src\main\resources\mapper路径下加入UserMapper.xml配置文件"
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.mapper.UserMapper">
+    <select id="queryUserList" resultType="user">
+        select * from user
+    </select>
+</mapper>
+```
+
+###  在application.properties中添加mybatis的信息
+
+```properties
+#spring集成Mybatis环境
+#pojo别名扫描包
+mybatis.type-aliases-package=com.itheima.domain
+#加载Mybatis映射文件
+mybatis.mapper-locations=classpath:mapper/*Mapper.xml
+```
+
+### 编写测试Controller
+
+```java
+@Controller
+public class MapperController {
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @RequestMapping("/queryUser")
+    @ResponseBody
+    public List<User> queryUser(){
+        List<User> users = userMapper.queryUserList();
+        return users;
+    }
+
+}
+```
+
+### 整合Redis
+
+添加redis依赖
+
+```
+<!-- 配置使用redis启动器 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+配置redis信息
+
+```
+spring
+  redis
+     host：127.0.0.1
+     port： 6379
+```
+
+注入RedisTemplate
+
+  另：RedisTemplate常用方法
+
+```
+判断是否有key对应的值，返回Boolean值
+redisTemplate.hasKey(Key)
+
+有则取出对应值
+redisTemplate.OpsForValue().get(Key)
+
+设置过期时间
+public Boolean expire(String key, long timeout, TimeUnit unit) {
+    return redisTemplate.expire(key, timeout, unit);
+ }
+
+
+```
+
