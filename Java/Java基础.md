@@ -580,11 +580,43 @@ this.成员方法-访问本类成员方法
 
 ### 一、String、StringBuffer、StringBuilder
 
+replace(CharSequence target, CharSequence replacement) ，用replacement替换所有的target，两个参数都是字符串。
+
+replaceAll(String regex, String replacement) ，用replacement替换所有的regex匹配项，regex很明显是个正则表达式，replacement是字符串。
+
+replaceFirst(String regex, String replacement) ，基本和replaceAll相同，区别是只替换第一个匹配项。
+
 #### 1、String
 
 String代表字符串，字符串在创建后不能被更改，即不可变类，其底层普遍用final修饰，所以不可变
 
-#### 2、StringBuilder
+String之所以是不可变类是因为其应用广泛，在增删改查时要进行安全检查，如果为可变类，将无法确保hashcode的唯一性，从而导致出现问题，其次在网络传输和文件路径上大部分使用String进行保存，如果为可变类将导致安全隐患和错误。
+
+String的常用方法：
+
+substring(int begin,int end)截取字符串并返回
+
+字符串拼接方式：String为不可变类，其实String所有的拼接都是创建了一个新的字符串。+、concat、使用StringBuffer或StringBuilder的append方法
+
+
+
+#### 常量池
+
+在Java中有三种常量池，一个是字符串常量池，还有Class常量池和运行时常量池
+
+字符串常量池
+
+在JVM中为了减少相同字符串的重复创建，为了达到节省内存的目的，会单独的开辟一个区域专门用于保存字符串常量，这个内存区域被叫做字符串常量池；当代码中出现双引号形式创建字符串对象时，JVM先对这个字符串进行检查，如果字符串常量池中存在相同内容的字符串对象的引用，则将这个引用返回，否则，创建新的字符串对象，然后将这个引用放入字符串常量池，并返回该引用。这种机制，称为字符串驻留或池化。字符串常量池的位置永久代中
+
+Class常量池
+
+class常量池相当于是一个Class文件中的资源仓库，用于存放编译器生成的各种字面量和符号引用，字面量是指由字母、数字等构成的字符串或者数值；符号引用，常量池中，除了字面量以外，还有符号引用，符号引用是编译原理中的概念，是相对于直接引用来说，主要包括类和接口的全限定名字段的名称和描述符还有方法的名称和描述符。
+
+运行时常量池
+
+运行时常量池是每个类或者接口的常量池运行时表示形式，它包括了若干种不同的常量
+
+2、StringBuilder
 
 StringBuilder是可变类，速度更快，线程不安全，单线程操作字符串
 
